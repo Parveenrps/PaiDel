@@ -8,7 +8,7 @@ const NavBar = () => {
 
       <div className="flex text-xl gap-8 font-semibold">
         <div className="flex gap-4">
-          <p>Bhai Chusega kya ? </p>
+          <p>Bhai teri gand faadd dunga   </p>
           <p>About us</p>
         </div>
 
