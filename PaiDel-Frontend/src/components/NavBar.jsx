@@ -1,10 +1,10 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
-    <div className='flex justify-between items-center text-white  bg-black p-4'>
-        <h1 className=' text-3xl font-bold  '>PaiDel</h1>
+    <div className="flex justify-between items-center text-white  bg-black p-4">
+      <h1 className=" text-3xl font-bold  ">PaiDel</h1>
 
         <div className='flex items-center text-xl gap-8 font-semibold'>
           <div className='flex gap-4'>
@@ -21,10 +21,10 @@ const NavBar = () => {
               <button className='hover:bg-black rounded-full pygi-1 px-2' >Sign Up</button> 
             </Link>
           </div>
-          
         </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;
