@@ -18,7 +18,7 @@ const NavBar = () => {
             </Link>
 
             <Link to="/signup" >
-              <button className='hover:bg-black rounded-full pygi-1 px-2' >Sign Up</button> 
+              <button className='hover:bg-black rounded-full py-1 px-2' >Sign Up</button> 
             </Link>
           </div>
         </div>
