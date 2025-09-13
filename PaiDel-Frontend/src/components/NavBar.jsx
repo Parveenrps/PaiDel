@@ -3,17 +3,6 @@ import { Link } from "react-router-dom";
 import { loggedInContext } from "../App";
 
 const NavBar = () => {
-  const {isLoggedin, setIsloggedin} = useContext(loggedInContext);
-  const userLoggedIn = JSON.parse(localStorage.getItem("userLoggedIn"));
-
-  useEffect(()=>{
-    if(userLoggedIn){
-      setIsloggedin(true);
-    }
-    else{
-      setIsloggedin(false);
-    }
-  }, [userLoggedIn, setIsloggedin])
 
   return (
     <div className="flex justify-between items-center text-white  bg-black p-4">
@@ -25,10 +14,6 @@ const NavBar = () => {
             <p>About us</p>
           </div>
 
-          {isLoggedin ?
-          <div className="rounded-full bg-white w-[40px] h-[40px] flex justify-center items-center text-black">
-            {userLoggedIn.name[0]}
-          </div> :
           <div className='flex gap-4 bg-gray-400 p-1 rounded-full '>
             <Link to="/signin">
               <button className='hover:bg-black rounded-full py-1 px-2' >Sign In</button> 
@@ -38,7 +23,7 @@ const NavBar = () => {
               <button className='hover:bg-black rounded-full py-1 px-2' >Sign Up</button> 
             </Link>
           </div>
-          }
+          
         </div>
       </div>
   );

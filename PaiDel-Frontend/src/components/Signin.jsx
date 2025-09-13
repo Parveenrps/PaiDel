@@ -14,7 +14,7 @@ const Signin = () => {
     });
   };
 
-  const handleSumbit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -23,12 +23,10 @@ const Signin = () => {
       return navigate("/signup");
     }
 
-    
-
     if (form.email === user.email && form.password === user.password) {
       setIsloggedin(true);
 
-      const userLoggedIn = localStorage.setItem( "userLoggedIn", JSON.stringify(user));
+      localStorage.setItem( "userLoggedIn", JSON.stringify(user));
 
       if (user.role === "user") {
         navigate("/user-dashboard");
@@ -50,7 +48,7 @@ const Signin = () => {
           Welcome Again!
         </p>
         <form
-          onSubmit={handleSumbit}
+          onSubmit={handleSubmit}
           className="flex flex-col gap-2 mt-4 mb-4 justify-start"
         >
           <input
@@ -70,7 +68,7 @@ const Signin = () => {
             onChange={handleChange}
           ></input>
 
-          <button type="sumbit" className="bg-black text-white p-1 rounded-md">
+          <button type="submit" className="bg-black text-white p-1 rounded-md">
             Sign In
           </button>
         </form>
