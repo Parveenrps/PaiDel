@@ -29,9 +29,9 @@ const Signin = () => {
       localStorage.setItem( "userLoggedIn", JSON.stringify(user));
 
       if (user.role === "user") {
-        navigate("/user-dashboard");
+        navigate("/user");
       } else if (user.role === "walker") {
-        navigate("/walker-dashboard");
+        navigate("/walker");
       }
     }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const WalkerDashboard = () => {
+const Walker = () => {
     const navigate = useNavigate();
     
     function handleLogout(){
@@ -18,4 +18,4 @@ const WalkerDashboard = () => {
   )
 }
 
-export default WalkerDashboard
+export default Walker

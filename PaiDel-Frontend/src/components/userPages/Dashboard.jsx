@@ -1,14 +1,11 @@
-import React from "react";
+import React from 'react'
 
-const Dashboard = ({ user }) => {
+const Dashboard = () => {
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold">
-        Hey {user?.name}, this is your dashboard
-      </h2>
-      <p className="text-gray-600 mt-2">Welcome back! Here is an overview of your account.</p>
+    <div>
+      <h1>This is Dashboard</h1>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
