@@ -1,6 +1,6 @@
 import './App.css'
 import NavBar from './components/NavBar'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import Signin from './components/Signin'
 import Signup from './components/Signup'
 import { createContext, useState } from 'react'
@@ -20,7 +20,15 @@ function App() {
         <NavBar />
 
         <Routes>
-          <Route path='/' element={<Hero></Hero>}/>
+          <Route
+            path='/'
+            element={<>
+            <Hero/>
+            <Aboutus id="about"/>
+            
+            <Footer/>
+          </>}/>
+
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
 
@@ -28,8 +36,6 @@ function App() {
           <Route path="/walker/*" element={<Walker />} />
         </Routes>
 
-        <Aboutus></Aboutus>
-        <Footer></Footer>
         
     </loggedInContext.Provider>
   )

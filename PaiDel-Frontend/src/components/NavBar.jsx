@@ -11,7 +11,7 @@ const NavBar = () => {
         <div className='flex items-center text-xl gap-8 font-semibold'>
           <div className='flex gap-4'>
             <p onClick={()=>navigate('/')}>Home</p>
-            <p onClick={()=>navigate('/aboutus')}>About us</p>
+            <a href="#about" >About us</a>
           </div>
 
           <div className='flex gap-4 bg-gray-400 p-1 rounded-full '>

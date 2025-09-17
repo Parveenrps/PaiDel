@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex h-screen bg-gray-900" >
 
@@ -14,7 +16,7 @@ const Hero = () => {
       </p>
 
       <div>
-        <button className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+        <button onClick={()=>navigate('/signin')} className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
           Get Started
         </button>
       </div>
