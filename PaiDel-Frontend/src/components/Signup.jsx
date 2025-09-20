@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { loggedInContext } from '../App';
 
 const Signup = () => {
+  const {isLoggedin, setIsloggedin} = useContext(loggedInContext);
   const [role, setRole] = useState(null);
   const [form, setForm] = useState({name:"", email:"", password:"", role:""})
   const navigate = useNavigate();
@@ -24,9 +26,8 @@ const Signup = () => {
 
   const handleSumbit = (e)=>{
     e.preventDefault();
-    console.log(form);
-    alert("loggedin");
-    navigate(`/${role}-dashboard`);
+    localStorage.setItem("user", JSON.stringify(form));
+    navigate(`${role}`);
   }
 
   return (
@@ -66,13 +67,14 @@ const Signup = () => {
                     <div className='flex justify-between bg-gray-200 rounded-full p-1'>
                     <button
                     type='button'
-                    onClick={  () => handleRole('walker') } 
+                    onClick={  () => handleRole('user') } 
                     className={`p-2 rounded-full  ${ role === 'user' ? " bg-black text-white " : "hover:bg-black hover:text-white" }`}
                     >User
                     </button>
 
                     {/* animation dalni hai */}
                     <button
+                    required
                     type='button'
                     onClick={ () => handleRole('walker') } 
                     className={`p-2 rounded-full ${ role === 'walker' ? " bg-black text-white " : "hover:bg-black hover:text-white" }`}
