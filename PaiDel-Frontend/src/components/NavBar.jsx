@@ -14,16 +14,16 @@ const NavBar = () => {
             <p>Home</p>
             <p>About us</p>
           </div>
-<<<<<<< HEAD
-=======
+
+
 
       <div className="flex text-xl gap-8 font-semibold">
         <div className="flex gap-4">
-          <p>Bhai teri gand faadd dunga</p>
+        
           <p>About us</p>
         </div>
 
->>>>>>> 93ec080ac22956b15d0b8c89f299666c50432afe
+
 
         <div className='flex gap-4 bg-gray-400 p-1 rounded-full '>
           <Link to="/signin">
