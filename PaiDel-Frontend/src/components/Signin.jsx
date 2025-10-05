@@ -18,6 +18,10 @@ const Signin = () => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
 
+    if(e.target.value = ""){
+      alert(`Please enter ${e.target.name}`);
+    }
+
     if (!user) {
       alert("Invailed user, Signup please!");
       return navigate("/signup");
@@ -33,10 +37,11 @@ const Signin = () => {
       } else if (user.role === "walker") {
         navigate("/walker");
       }
+
     }
 
     else{
-      alert("User not Exist")
+      alert("User not Exist");
     }
 
   };

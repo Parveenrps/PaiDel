@@ -20,14 +20,11 @@ function App() {
         <NavBar />
 
         <Routes>
-          <Route
-            path='/'
-            element={<>
+          <Route path='/' element={<>
             <Hero/>
             <Aboutus id="about"/>
-            
-            <Footer/>
-          </>}/>
+            <Footer/></>}
+          />
 
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
