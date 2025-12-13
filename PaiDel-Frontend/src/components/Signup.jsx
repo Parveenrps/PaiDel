@@ -28,11 +28,7 @@ const Signup = () => {
     e.preventDefault();
     localStorage.setItem("user", JSON.stringify(form));
     localStorage.setItem("userLoggedIn", JSON.stringify(form));
-    if (form.role === "user") {
-        navigate("/user");
-      } else if (form.role === "walker") {
-        navigate("/walker");
-      }
+    navigate(`/${role}`);
   }
 
   return (
