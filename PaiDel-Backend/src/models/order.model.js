@@ -7,15 +7,13 @@ const orderSchema = new Schema(
             require: true,
             trim: true,
         },
-        pickFrom:{
-            type: String,
-            require: true,
-            trim: true,
+        pickupAddress:{
+            type: Schema.Types.ObjectId,
+            ref: "Address"
         },
-        dropTo:{
-            type: String,
-            require: true,
-            trim: true,
+        dropAddress:{
+            type: Schema.Types.ObjectId,
+            ref: "Address"
         },
         user:{
             type: Schema.Types.ObjectId,
@@ -24,6 +22,10 @@ const orderSchema = new Schema(
         walker:{
             type: Schema.Types.ObjectId,
             ref: "Walker"
+        },
+        payment:{
+            type: Schema.Types.ObjectId,
+            ref: "Payment"
         }
     },
     { 
