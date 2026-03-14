@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const Orders = () => {
   const [activeTab, setActiveTab] = useState("place");
@@ -91,7 +92,7 @@ const Orders = () => {
           }`}
           onClick={() => setActiveTab("ongoing")}
         >
-          On-going
+          PaiDeling
         </button>
         <button
           className={`px-4 py-2 rounded ${
@@ -166,35 +167,42 @@ const Orders = () => {
       )}
 
       {activeTab !== "place" && (
-        <div className="grid gap-4">
+        <div className="flex flex-col gap-4">
           {filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (
-              <div
-                key={order.id}
-                className="p-6 bg-white shadow rounded-lg flex flex-col"
-              >
-                <p>
-                  <span className="font-semibold">Order ID:</span> {order.id}
-                </p>
+              <div key={order.id} className="p-6 bg-white shadow rounded-lg flex justify-between" >
+
+                <div className="flex flex-col"> 
+                  <p>
+                    <span className="font-semibold">Order ID:</span> {order.id}
+                  </p>
                 <p>
                   <span className="font-semibold">Item:</span> {order.item}
                 </p>
-                <p>
-                  <span className="font-semibold">Date:</span> {order.date}
-                </p>
+
                 <p>
                   <span className="font-semibold">From:</span> {order.from}
                 </p>
                 <p>
                   <span className="font-semibold">To:</span> {order.to}
                 </p>
+                </div>
+
+                <div className="flex flex-col ">
+                  <p>
+                  <span className="font-semibold">Date:</span> {order.date}
+                </p>
+                
                 <p>
                   <span className="font-semibold">Walker:</span> {order.walker}
                 </p>
+
                 <p>
-                  <span className="font-semibold">Status: {order.status}
-                  </span>
+                  <span className="font-semibold">Status: </span> {order.status} 
                 </p>
+
+                </div>
+              
               </div>
             ))
           ) : (

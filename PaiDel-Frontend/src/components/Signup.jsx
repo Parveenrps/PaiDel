@@ -27,7 +27,8 @@ const Signup = () => {
   const handleSumbit = (e)=>{
     e.preventDefault();
     localStorage.setItem("user", JSON.stringify(form));
-    navigate(`${role}`);
+    localStorage.setItem("userLoggedIn", JSON.stringify(form));
+    navigate(`/${role}`);
   }
 
   return (

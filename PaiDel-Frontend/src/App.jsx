@@ -15,23 +15,16 @@ export const loggedInContext = createContext();
 function App() {
   const [isLoggedin, setIsloggedin] = useState(false);
 
-  const connectbackend = ()=>{
-    fetch('http://localhost:8000').then((error)=>console.log("connected", error.status)).catch((error)=>console.log(error))
-  }
-
   return (
     <loggedInContext.Provider value={{ isLoggedin, setIsloggedin }}>
         <NavBar />
         <button onClick={connectbackend}>connect</button>
         <Routes>
-          <Route
-            path='/'
-            element={<>
+          <Route path='/' element={<>
             <Hero/>
             <Aboutus id="about"/>
-            
-            <Footer/>
-          </>}/>
+            <Footer/></>}
+          />
 
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />

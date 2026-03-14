@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, Routes, Route } from "react-router-dom";
-import Dashboard from "./userPages/Dashboard";
 import Logout from "./userPages/Logout";
 import Orders from "./userPages/Orders";
 import Settings from "./userPages/Settings";
@@ -23,17 +22,14 @@ const User = () => {
           </div>
         </div>
 
-        <Link to="/user/dashboard" className="block py-2 hover:text-blue-400">Dashboard</Link>
         <Link to="/user/orders" className="block py-2 hover:text-blue-400">Orders</Link>
         <Link to="/user/settings" className="block py-2 hover:text-blue-400">Settings</Link>
         <Link to="/user/logout" className="block py-2 hover:text-blue-400">Logout</Link>
       </div>
 
-      {/* Right content */}
       <div className="flex-1 bg-gray-100 p-6 overflow-y-auto">
         <Routes>
-          <Route index element={<Dashboard></Dashboard>}/>
-          <Route path="dashboard" element={<Dashboard/>}/>
+          <Route index element={<Orders></Orders>}/>
           <Route path="orders" element={<Orders/>}/>
           <Route path="settings" element={<Settings/>}/>
           <Route path="logout" element={<Logout />}/>
