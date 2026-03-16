@@ -26,21 +26,20 @@ const userSchema = new Schema(
       trim: true,
       unique: true,
     },
-
-    address: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
     role:{
       type: String,
       required: true,
-      enum: ["User", "Walker"]
+      lowercase: true,
+      enum: ["user", "walker"]
     },
     refreshToken: {
-      type: String,
+      type: String
     },
+
+    isVerified: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,
