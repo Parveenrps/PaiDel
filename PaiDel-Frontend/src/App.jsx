@@ -9,6 +9,7 @@ import Walker from './components/Walker'
 import Aboutus from './components/Aboutus'
 import Footer from './components/Footer'
 import Hero from './components/Hero'
+import VerifyOtp from './components/VerifyOtp'
 
 export const loggedInContext = createContext();
 
@@ -18,7 +19,7 @@ function App() {
   return (
     <loggedInContext.Provider value={{ isLoggedin, setIsloggedin }}>
         <NavBar />
-        <button onClick={connectbackend}>connect</button>
+
         <Routes>
           <Route path='/' element={<>
             <Hero/>
@@ -28,6 +29,7 @@ function App() {
 
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
 
           <Route path="/user/*" element={<User />}/>
           <Route path="/walker/*" element={<Walker />} />

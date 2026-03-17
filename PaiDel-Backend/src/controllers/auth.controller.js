@@ -68,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
     console.log(`OTP for user ${newUser._id} is ${otp}`);
 
     return res.status(201).json(
-        new apiResponse(201, newUser._id, "User registered successfully, Please verify your email to login")
+        new apiResponse(201, {userId: newUser._id, otp: otp}, "User registered successfully, Please verify your email to login")
     );
 });
 
