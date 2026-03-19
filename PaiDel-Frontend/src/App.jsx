@@ -2,7 +2,7 @@ import './App.css'
 import NavBar from './components/NavBar'
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import Signin from './components/Signin'
-import Signup from './components/Signup'
+import Signup from './components/authPages/Signup'
 import { createContext, useState } from 'react'
 import User from './components/User'
 import Walker from './components/Walker'
@@ -29,7 +29,7 @@ function App() {
 
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/verify-otp" element={<ProtectedRoute><VerifyOtp /></ProtectedRoute>} />
 
           <Route path="/user/*" element={<User />}/>
           <Route path="/walker/*" element={<Walker />} />

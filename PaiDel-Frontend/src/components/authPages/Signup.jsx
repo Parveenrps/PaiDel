@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { loggedInContext } from '../App';
-import { registerUser } from '../services/authService';
+import { loggedInContext } from '../../App';
+import { registerUser } from '../../services/authService';
 
 const Signup = () => {
   const [role, setRole] = useState(null);
