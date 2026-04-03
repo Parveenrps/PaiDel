@@ -47,12 +47,10 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new apiError(400, "User already exists");
     }
 
-    const hashedPasword = await bcrypt.hash(password, 10);
-
     const newUser = await User.create({
         name,
         email,
-        password: hashedPasword,
+        password: password,
         role,
         phoneNo
     })
@@ -85,7 +83,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
         throw new apiError(400, "OTP has expired");
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("-password -refreshToken");
     user.isVerified = true;
     await user.save();
     await OTP.deleteOne({ _id: record._id });
@@ -102,19 +100,70 @@ const verifyOTP = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
     .json(
-        new apiResponse(200, userId, "OTP verified successfully")
+        new apiResponse(200, user, "OTP verified successfully")
     );
 });
 
-// const loginUser = asyncHandler(async (req, res) => {
-//     res.status(200).json({message: "User logged in successfully"});
-// });
+const loginUser = asyncHandler(async(req, res) =>{
+    const { phoneNo, password } = req.body;
 
-// const logoutUser = asyncHandler(async (req, res) => {
-//     res.status(200).json({message: "User logged out successfully"});
-// });
+    if([phoneNo, password].some( (field) => field?.trim() === "")){
+        throw new apiError(400, "All fields are required");
+    }
+
+    const user = await User.findOne({ phoneNo });
+
+    if(!user){
+        throw new apiError(400, "Invalid User, Please check your phone number");
+    }
+
+    const isPasswordCorrect = await user.isPasswordCorrect(password);
+
+    if(!isPasswordCorrect){
+        throw new apiError(400, "Invalid password");
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.create({
+        userId: user._id,
+        otp,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000)
+    })
+
+    console.log(`OTP for user ${user._id} is ${otp}`);
+
+    return res.status(201).json(
+        new apiResponse(201, {userId: user._id, otp: otp}, "OTP sent to your registered phone number, Please verify to login")
+    );
+
+})
+
+const logoutUser = asyncHandler(async(req, res) => {
+    const userId = req.user._id;
+    const user = await User.findByIdAndDelete(userId, { $unset : {refreshToken: 1}}, {new: true});
+
+    if(!user){
+        throw new apiError(400, "User not found");
+    }
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }   
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+        new apiResponse(200, {}, "Logged out successfully")
+    );
+})
 
 export {
     registerUser,
     verifyOTP,
+    loginUser,
+    logoutUser
 };
