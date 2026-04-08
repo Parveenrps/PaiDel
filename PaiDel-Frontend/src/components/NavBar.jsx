@@ -6,7 +6,6 @@ const NavBar = () => {
   const {isLoggedin, setIsloggedin} = useContext(loggedInContext);
   const navigate = useNavigate();
 
-  const userLoggedIn = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="flex justify-between items-center text-white  bg-black p-4">
       <h1 className=" text-3xl font-bold  ">PaiDel</h1>

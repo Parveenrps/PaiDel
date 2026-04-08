@@ -141,7 +141,7 @@ const loginUser = asyncHandler(async(req, res) =>{
 
 const logoutUser = asyncHandler(async(req, res) => {
     const userId = req.user._id;
-    const user = await User.findByIdAndDelete(userId, { $unset : {refreshToken: 1}}, {new: true});
+    const user = await User.findByIdAndUpdate(userId, { $unset : {refreshToken: 1}}, {new: true});
 
     if(!user){
         throw new apiError(400, "User not found");
@@ -161,9 +161,63 @@ const logoutUser = asyncHandler(async(req, res) => {
     );
 })
 
+const refreshAccessToken = asyncHandler(async(req, res) => {
+    const refreshToken = req.cookies?.refreshToken || req.headers.authorization?.split(" ")[1];
+
+    if(!refreshToken){
+        throw new apiError(401, "Unauthorized, Please provide a valid refresh token");
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const user = await User.findById(decoded?._id);
+
+        if(!user){
+            throw new apiError(401, "Unauthorized, User not found");
+        }
+
+        if(user.refreshToken !== refreshToken){
+            throw new apiError(401, "Unauthorized, Invalid refresh token");
+        }
+
+        const {accessToken, newRefreshToken} = await generarteAccessAndRefreshToken(user._id);
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", newRefreshToken, options)
+        .status(200)
+        .json(
+            new apiResponse(200, {accessToken, refreshToken: newRefreshToken}, "Access token refreshed successfully")
+        );
+    } catch (error) {
+        throw new apiError(401, "Unauthorized, Invalid or expired refresh token");
+    }
+})
+
+const getCurrentUser = asyncHandler( async(req, res)=>{
+    const user = await User.findById(req.user._id);
+
+    if(!user){
+        throw new apiError(400, "user not found")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new apiResponse(200, user, "User fetched successfully")
+    )
+})
+
 export {
     registerUser,
     verifyOTP,
     loginUser,
-    logoutUser
+    logoutUser,
+    refreshAccessToken,
+    getCurrentUser
 };

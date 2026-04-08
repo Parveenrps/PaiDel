@@ -21,8 +21,10 @@ const VerifyOtp = () => {
         userId,
         otp : otp.toString().trim()
       });
-
-      console.log(res.data.data.role)
+      
+      localStorage.setItem("user", JSON.stringify(res.data.data));
+      console.log(res.data.data.role);
+      
       let role = res.data.data.role;
       navigate(`/${role}`);
     } catch (err) {
