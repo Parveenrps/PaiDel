@@ -36,7 +36,7 @@ const userSchema = new Schema(
       type: String
     },
 
-    isVerified: {
+    isOTPVerified: {
       type: Boolean,
       default: false
     }
@@ -59,7 +59,8 @@ userSchema.methods.generateAccessToken = function() {
   return jwt.sign(
     { 
       id: this._id,
-      role: this.role 
+      role: this.role,
+      isOTPVerified: this.isOTPVerified
     },
     process.env.JWT_ACCESS_SECRET,
     {

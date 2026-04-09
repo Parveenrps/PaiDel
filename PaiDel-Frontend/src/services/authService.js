@@ -19,3 +19,7 @@ export const logoutUser = () => {
 export const refreshToken = () => {
     return api.post("auth/refresh-token")
 }
+
+export const getCurrentUser = () => {
+    return api.get("auth/me")
+}

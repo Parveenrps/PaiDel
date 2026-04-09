@@ -20,10 +20,7 @@ const VerifyOtp = () => {
       const res = await verifyOTP({
         userId,
         otp : otp.toString().trim()
-      });
-      
-      localStorage.setItem("user", JSON.stringify(res.data.data));
-      console.log(res.data.data.role);
+      })
       
       let role = res.data.data.role;
       navigate(`/${role}`);

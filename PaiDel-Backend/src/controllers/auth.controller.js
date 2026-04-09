@@ -65,14 +65,29 @@ const registerUser = asyncHandler(async (req, res) => {
 
     console.log(`OTP for user ${newUser._id} is ${otp}`);
 
-    return res.status(201).json(
-        new apiResponse(201, {userId: newUser._id, otp: otp}, "User registered successfully, Please verify your email to login")
+    const {accessToken, refreshToken} = await generarteAccessAndRefreshToken(newUser._id);
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .status(201).json(
+        new apiResponse(201, {isOTPVerified: newUser.isOTPVerified, otp}, "User registered successfully, Please verify OTP")
     );
 });
 
 const verifyOTP = asyncHandler(async (req, res) => {
-    const { userId, otp } = req.body;
-    
+    const { otp } = req.body;
+    const userId = req.user._id;
+
+    if(!otp || otp.trim() === ""){
+        throw new apiError(400, "OTP is required");
+    }
+
     const record = await OTP.findOne({ userId, otp });
 
     if(!record){
@@ -84,7 +99,9 @@ const verifyOTP = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findById(userId).select("-password -refreshToken");
-    user.isVerified = true;
+
+    user.isOTPVerified = true;
+
     await user.save();
     await OTP.deleteOne({ _id: record._id });
 
@@ -133,8 +150,18 @@ const loginUser = asyncHandler(async(req, res) =>{
 
     console.log(`OTP for user ${user._id} is ${otp}`);
 
-    return res.status(201).json(
-        new apiResponse(201, {userId: user._id, otp: otp}, "OTP sent to your registered phone number, Please verify to login")
+    const {accessToken, refreshToken} = await generarteAccessAndRefreshToken(user._id);
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .status(201).json(
+        new apiResponse(201, {isOTPVerified: user.isOTPVerified, otp}, "User registered successfully, Please verify OTP")
     );
 
 })
@@ -146,7 +173,9 @@ const logoutUser = asyncHandler(async(req, res) => {
     if(!user){
         throw new apiError(400, "User not found");
     }
-
+    user.isOTPVerified = false;
+    await user.save();
+    
     const options = {
         httpOnly: true,
         secure: true
@@ -170,7 +199,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        const user = await User.findById(decoded?._id);
+        const user = await User.findById(decoded?.id);
 
         if(!user){
             throw new apiError(401, "Unauthorized, User not found");

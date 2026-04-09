@@ -3,24 +3,27 @@ import { Link, Routes, Route } from "react-router-dom";
 import Logout from "../../components/Logout";
 import Orders from "./Orders";
 import Settings from "./Settings";
-
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "../../services/authService.js";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 const User = () => {
-  // const userLoggedIn = JSON.parse(localStorage.getItem("userLoggedIn")) || { name: "Guest", email: "guest@example.com" };
+  const {user, loading} = useContext(AuthContext)
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  console.log("User from localStorage:", user);
-
+  if(!user){
+    return <div>User not found</div>
+  }
   return (
     <div className="flex h-screen">
       <div className="bg-black w-[20%] text-white p-4">
         <div className="flex items-center mb-4">
           <div className="rounded-full bg-white w-12 h-12 flex justify-center items-center text-black font-bold text-lg">
-            {user.name}
+            {user.name.charAt(0).toUpperCase()}
           </div>
           <div className="ml-4">
-            <p className="text-xl font-semibold">{user.name}</p>
-            <p className="text-sm text-gray-300">{user.email}</p>
+            <p className="text-xl font-semibold">{user.name.charAt(0).toUpperCase() + user.name.slice(1)}</p>
+            <p className="text-sm text-gray-300">{user.phoneNo}</p>
           </div>
         </div>
 

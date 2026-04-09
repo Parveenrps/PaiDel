@@ -1,10 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loggedInContext } from "../../App";
 import { loginUser } from "../../services/authService";
 
 const Signin = () => {
-  const { isLoggedin, setIsloggedin } = useContext(loggedInContext);
   const [form, setForm] = useState({ phoneNo: "", password: "" });
   const navigate = useNavigate();
 
@@ -17,9 +15,7 @@ const Signin = () => {
   
     try {
       const res = await loginUser(form);
-      localStorage.setItem("userId", res.data.data.userId);
-      localStorage.setItem("otp", res.data.data.otp);
-      console.log(res.data.data.otp)
+      console.log(res.data.data)
       navigate("/verify-otp");
     } catch (error) {
       console.log("Error during login:", error.response.data.message || error.message);
