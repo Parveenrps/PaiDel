@@ -1,8 +1,11 @@
 import React from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const {user} = useContext(AuthContext);
   return (
     <div className="flex h-screen bg-gray-900" >
 
@@ -16,9 +19,15 @@ const Hero = () => {
       </p>
 
       <div>
-        <button onClick={()=>navigate('/signin')} className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+        {user ? (
+          <button onClick={()=>navigate(`/${user.role}/orders`)} className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+          Book PaiDel Service
+        </button>
+        ) : (
+          <button onClick={()=>navigate('/signin')} className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
           Get Started
         </button>
+        )}
       </div>
 
       </div>

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { verifyOTP } from "../../services/authService.js";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,6 +25,7 @@ const VerifyOtp = () => {
       })
       
       let role = res.data.data.role;
+      setUser(res.data.data);
       navigate(`/${role}`);
     } catch (err) {
       console.log("Error during OTP verification:", err.message);

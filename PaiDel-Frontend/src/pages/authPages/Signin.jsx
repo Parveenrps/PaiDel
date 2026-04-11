@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
+import { AuthContext } from "../../context/AuthContext";
 
 const Signin = () => {
   const [form, setForm] = useState({ phoneNo: "", password: "" });
   const navigate = useNavigate();
+  const { setUser, setLoading } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setForm({...form, [e.target.name]: e.target.value,});
@@ -16,6 +18,7 @@ const Signin = () => {
     try {
       const res = await loginUser(form);
       console.log(res.data.data)
+      setUser(res.data.data);
       navigate("/verify-otp");
     } catch (error) {
       console.log("Error during login:", error.response.data.message || error.message);

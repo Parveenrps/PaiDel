@@ -7,7 +7,7 @@ export const loggedInContext = createContext();
 import Signin from './pages/authPages/Signin'
 import VerifyOtp from './pages/authPages/VerifyOtp'
 import Signup from './pages/authPages/Signup'
-import ProtectedRoute from './pages/authPages/ProtectedRoute'
+import ProtectedRoute from './routes/ProtectedRoute'
 
 
 import User from './pages/userPages/User'
@@ -16,6 +16,8 @@ import Aboutus from './components/Aboutus'
 import Footer from './components/Footer'
 import Hero from './components/Hero'
 import { AuthContext } from './context/AuthContext';
+import PublicRoutes from './routes/PublicRoutes';
+import OtpRoute from './routes/OtpRoute';
 
 
 
@@ -39,19 +41,11 @@ function App() {
             </>
           }/>
 
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verify-otp" element={
-            <ProtectedRoute requiredVerification={false}>
-              <VerifyOtp />
-            </ProtectedRoute>
-          } />
+          <Route path="/signin" element={<PublicRoutes><Signin /></PublicRoutes>} />
+          <Route path="/signup" element={ <PublicRoutes><Signup /></PublicRoutes>} />
+          <Route path="/verify-otp" element={<OtpRoute><VerifyOtp /></OtpRoute>} />
 
-          <Route path="/user/*" element={
-            <ProtectedRoute requiredVerification={true}>
-              <User />
-            </ProtectedRoute>
-          }/>
+          <Route path="/user/*" element={<ProtectedRoute><User /></ProtectedRoute>} />
           <Route path="/walker/*" element={<Walker />} />
         </Routes>
 
