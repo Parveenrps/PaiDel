@@ -39,6 +39,11 @@ const userSchema = new Schema(
     isOTPVerified: {
       type: Boolean,
       default: false
+    },
+    status:{
+      type: String,
+      enum: ["available", "busy"],
+      default: "available"
     }
   },
   {

@@ -5,6 +5,10 @@ const addressSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Order"
     },
+    fullAddress: {
+        type: String,
+        required: true,
+    },
     street: {
         type: String,
         required: true,

@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import { errorHandler } from './middlewares/errorHandler.js';
 const app = express();
 
+console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN);
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
@@ -16,8 +17,14 @@ app.use(cookieParser());
 
 // Importing Routes
 import authRouter from './routes/auth.routes.js'
+import orderRouter from './routes/order.route.js'
+import walkerRouter from './routes/walker.routes.js'
+import userRouter from './routes/user.routes.js'
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/walker", walkerRouter);
+app.use("/api/v1/user", userRouter)
 
 app.use(errorHandler)
 

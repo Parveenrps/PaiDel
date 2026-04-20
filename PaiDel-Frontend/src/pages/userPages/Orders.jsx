@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { getAllAvailableWalkers } from "../../services/userService";
+import { useEffect } from "react";
 
 const Orders = () => {
   const [activeTab, setActiveTab] = useState("place");
+  const [placedOrders, setPlacedOrders] = useState([]);
+  const [walkers, setWalkers] = useState([]);
   const [orders, setOrders] = useState([
     {
       id: "ORD123",
@@ -11,7 +15,6 @@ const Orders = () => {
       status: "ongoing",
       from: "Sector 5",
       to: "Sector 9",
-      walker: "Ravi Kumar",
     },
     {
       id: "ORD124",
@@ -20,7 +23,6 @@ const Orders = () => {
       status: "delivered",
       from: "Sector 7",
       to: "Sector 12",
-      walker: "Amit Singh",
     },
     {
       id: "ORD125",
@@ -29,7 +31,6 @@ const Orders = () => {
       status: "cancelled",
       from: "Sector 2",
       to: "Sector 8",
-      walker: "Rahul Verma",
     },
   ]);
 
@@ -37,15 +38,7 @@ const Orders = () => {
     item: "",
     from: "",
     to: "",
-    walker: "",
   });
-
-  const walkers = [
-    { id: "W1", name: "Ravi Kumar" },
-    { id: "W2", name: "Amit Singh" },
-    { id: "W3", name: "Rahul Verma" },
-    { id: "W4", name: "Sandeep" },
-  ];
 
   const handleNewOrder = (e)=>{
     const {name, value} = e.target;
@@ -63,16 +56,28 @@ const Orders = () => {
       status: "ongoing",
       from: newOrder.from,
       to: newOrder.to,
-      walker: newOrder.walker,
-
     }
 
     setOrders([...orders, newOrderObj]);
-    setNewOrder({item: "", from: "", to: "", walker: ""});
+    setNewOrder({item: "", from: "", to: ""});
     setActiveTab("ongoing");
   }
 
   const filteredOrders = orders.filter((order) => order.status === activeTab);
+
+  const fetchAllAvailableWalkers = async()=>{
+    try {
+      const availableWalkers = await getAllAvailableWalkers();
+      console.log("Available Walkers:", availableWalkers.data.data);
+      setWalkers(availableWalkers.data.data);
+    } catch (error) {
+      console.error("Error fetching walkers:", error.response?.data || error.message);
+    }
+  }
+
+  useEffect(()=>{
+    fetchAllAvailableWalkers();
+  }, []);
 
   return (
     <div className="p-6">
@@ -151,7 +156,7 @@ const Orders = () => {
           >
             <option value="">Select Walker</option>
             {walkers.map((w) => (
-              <option key={w.id} value={w.name}>
+              <option key={w._id} value={w._id}>
                 {w.name}
               </option>
             ))}

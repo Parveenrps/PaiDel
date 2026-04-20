@@ -15,13 +15,18 @@ const orderSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Address"
         },
+        status:{
+            type: String,
+            enum: ["pending", "accepted", "walking", "completed", "cancelled"],
+            default: "pending"
+        },
         user:{
             type: Schema.Types.ObjectId,
             ref: "User"
         },
         walker:{
             type: Schema.Types.ObjectId,
-            ref: "Walker"
+            ref: "User"
         },
         payment:{
             type: Schema.Types.ObjectId,
