@@ -4,6 +4,7 @@ import {User} from '../models/user.model.js';
 import {OTP} from '../models/otp.model.js';
 import bcrypt from 'bcrypt';
 import { apiResponse } from '../utils/apiResponse.js';
+import { cookieOptions } from '../config/cookieOptions.js';
 
 const generarteAccessAndRefreshToken = async(userId) => {
     try {
@@ -67,14 +68,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const {accessToken, refreshToken} = await generarteAccessAndRefreshToken(newUser._id);
 
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
-
     return res
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .status(201).json(
         new apiResponse(201, {isOTPVerified: newUser.isOTPVerified, otp}, "User registered successfully, Please verify OTP")
     );
@@ -107,15 +103,11 @@ const verifyOTP = asyncHandler(async (req, res) => {
 
     const {accessToken, refreshToken} = await generarteAccessAndRefreshToken(userId);
 
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
 
     return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
         new apiResponse(200, user, "OTP verified successfully")
     );
@@ -152,14 +144,9 @@ const loginUser = asyncHandler(async(req, res) =>{
 
     const {accessToken, refreshToken} = await generarteAccessAndRefreshToken(user._id);
 
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
-
     return res
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .status(201).json(
         new apiResponse(201, {isOTPVerified: user.isOTPVerified, otp}, "User registered successfully, Please verify OTP")
     );
@@ -175,16 +162,12 @@ const logoutUser = asyncHandler(async(req, res) => {
     }
     user.isOTPVerified = false;
     await user.save();
-    
-    const options = {
-        httpOnly: true,
-        secure: true
-    }   
+
 
     return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
     .json(
         new apiResponse(200, {}, "Logged out successfully")
     );
@@ -211,14 +194,9 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
 
         const {accessToken, newRefreshToken} = await generarteAccessAndRefreshToken(user._id);
 
-        const options = {
-            httpOnly: true,
-            secure: true
-        }
-
         return res
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", newRefreshToken, cookieOptions)
         .status(200)
         .json(
             new apiResponse(200, {accessToken, refreshToken: newRefreshToken}, "Access token refreshed successfully")
