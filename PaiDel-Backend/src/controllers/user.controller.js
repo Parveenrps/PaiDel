@@ -5,13 +5,7 @@ import { User } from "../models/user.model.js";
 
 
 export const getAllAvailableWalkers = asyncHandler(async(req, res) => {
-    const {status} = req.query;
-
-    if(!status) {
-        throw new apiError(400, "Status query parameter is required");
-    }
-
-    const availableWalkers = await User.find({role: "walker", status}).select("_id name");
+    const availableWalkers = await User.find({role: "walker", status: "available"}).select("_id name");
 
     if(!availableWalkers){
         throw new apiError(500, "Something went wrong while fetching available walkers");

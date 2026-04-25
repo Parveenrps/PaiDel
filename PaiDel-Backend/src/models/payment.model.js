@@ -1,13 +1,17 @@
 import mongoose, {Schema} from "mongoose";
 
 const paymentSchema = new Schema({
-    order:{
+    orderID:{
         type: Schema.Types.ObjectId,
         ref: "Order"
     },
-    walker:{
+    userID:{
         type: Schema.Types.ObjectId,
-        ref: "Walker"
+        ref: "User"
+    },
+    walkerID:{
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
     amount:{
         type: Number,
@@ -21,7 +25,8 @@ const paymentSchema = new Schema({
     status:{
         type: String,
         required: true,
-        enum: ["Pending", "Completed", "Failed"]
+        enum: ["Pending", "Completed", "Failed"],
+        default: "Pending"
     },
 },{ timestamps: true });
 

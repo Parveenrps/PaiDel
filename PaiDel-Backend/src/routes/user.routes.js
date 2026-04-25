@@ -9,6 +9,6 @@ const router = Router();
 
 router.use(verifyToken);
 
-router.route("/walkers").get(getAllAvailableWalkers)
+router.route("/available-walkers").get(getAllAvailableWalkers);
 
 export default router;

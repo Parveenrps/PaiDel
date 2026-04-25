@@ -1,83 +1,66 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { getAllAvailableWalkers } from "../../services/userService";
+import { getAllAvailableWalkers, getAllOrders, placeOrder, updateOrderStatus } from "../../services/userService.js";
 import { useEffect } from "react";
+import socket from "../../services/socket.js";
+
 
 const Orders = () => {
   const [activeTab, setActiveTab] = useState("place");
-  const [placedOrders, setPlacedOrders] = useState([]);
   const [walkers, setWalkers] = useState([]);
-  const [orders, setOrders] = useState([
-    {
-      id: "ORD123",
-      item: "Groceries",
-      date: "2025-09-17 10:00 AM",
-      status: "ongoing",
-      from: "Sector 5",
-      to: "Sector 9",
-    },
-    {
-      id: "ORD124",
-      item: "Medicine",
-      date: "2025-09-16 02:30 PM",
-      status: "delivered",
-      from: "Sector 7",
-      to: "Sector 12",
-    },
-    {
-      id: "ORD125",
-      item: "Clothes",
-      date: "2025-09-15 05:45 PM",
-      status: "cancelled",
-      from: "Sector 2",
-      to: "Sector 8",
-    },
-  ]);
+  const [placeNewOrder, setPlaceNewOrder] = useState({item: "", pickupAddress: "", dropAddress: "", walkerID: ""});
+  const [orders, setOrders] = useState([]);
 
-  const [newOrder, setNewOrder] = useState({
-    item: "",
-    from: "",
-    to: "",
-  });
-
-  const handleNewOrder = (e)=>{
-    const {name, value} = e.target;
-
-    setNewOrder((prev)=>({...prev, [name] : value}))
-
+  const handleChange = (e)=>{
+    e.preventDefault();
+    setPlaceNewOrder( (prev) => ({
+      ...prev, [e.target.name] : e.target.value
+    }))
   }
 
-  const placeOrder =()=>{
-    const newId = "ORD" + (Math.floor(Math.random()*100) + 120);
-    const newOrderObj = {
-      id: newId,
-      item: newOrder.item,
-      date: new Date().toLocaleString(),
-      status: "ongoing",
-      from: newOrder.from,
-      to: newOrder.to,
+  const handlePlaceNewOrder = async ()=>{
+    socket.on("connect", ()=>{
+      console.log("Connected to Socket.IO server with ID:", socket.id);
+    })
+    try {
+      const res = await placeOrder(placeNewOrder);
+      setPlaceNewOrder({item: "", pickupAddress: "", dropAddress: "", walkerID: ""});
+      fetchAllOrders();
+    } catch (error) {
+      console.log("Error placing order:", error.response?.data || error.message);
     }
-
-    setOrders([...orders, newOrderObj]);
-    setNewOrder({item: "", from: "", to: ""});
-    setActiveTab("ongoing");
   }
-
-  const filteredOrders = orders.filter((order) => order.status === activeTab);
 
   const fetchAllAvailableWalkers = async()=>{
     try {
       const availableWalkers = await getAllAvailableWalkers();
-      console.log("Available Walkers:", availableWalkers.data.data);
       setWalkers(availableWalkers.data.data);
     } catch (error) {
       console.error("Error fetching walkers:", error.response?.data || error.message);
     }
   }
+  const fetchAllOrders = async()=>{
+    try {
+      const orders = await getAllOrders();
+      setOrders(orders.data.data);
+    } catch (error) {
+      console.error("Error fetching orders:", error.response?.data || error.message);
+    }
+  }
 
   useEffect(()=>{
     fetchAllAvailableWalkers();
+    fetchAllOrders();
   }, []);
+
+  const handleCancelOrder = async(orderID) => {
+    try {
+      const res = await updateOrderStatus(orderID, "cancelled");
+      fetchAllOrders();
+    } catch (error) {
+      console.log("Error cancelling order:", error.response?.data || error.message);
+    }
+  }
 
   return (
     <div className="p-6">
@@ -125,33 +108,33 @@ const Orders = () => {
             name="item"
             type="text"
             placeholder="Item"
-            value={newOrder.item}
-            onChange={handleNewOrder}
+            value={placeNewOrder.item}
+            onChange={handleChange}
             className="w-full p-2 border rounded mb-3"
           />
 
           <input
-            name="from"
+            name="pickupAddress"
             type="text"
-            placeholder="Pick from"
-            value={newOrder.from}
-            onChange={handleNewOrder}
+            placeholder="Pick Address"
+            value={placeNewOrder.pickupAddress}
+            onChange={handleChange}
             className="w-full p-2 border rounded mb-3"
           />
 
           <input
-            name="to"
+            name="dropAddress"
             type="text"
             placeholder="Drop to"
-            value={newOrder.to}
-            onChange={handleNewOrder}
+            value={placeNewOrder.dropAddress}
+            onChange={handleChange}
             className="w-full p-2 border rounded mb-3"
           />
           
           <select
-            name="walker"
-            value={newOrder.walker}
-            onChange={handleNewOrder}
+            name="walkerID"
+            value={placeNewOrder.walkerID}
+            onChange={handleChange}
             className="w-full p-2 border rounded mb-3"
           >
             <option value="">Select Walker</option>
@@ -163,7 +146,7 @@ const Orders = () => {
           </select>
 
           <button
-            onClick={placeOrder}
+            onClick={handlePlaceNewOrder}
             className="bg-green-500 text-white px-4 py-2 rounded w-full"
           >
             Place Order
@@ -171,50 +154,43 @@ const Orders = () => {
         </div>
       )}
 
-      {activeTab !== "place" && (
-        <div className="flex flex-col gap-4">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
-              <div key={order.id} className="p-6 bg-white shadow rounded-lg flex justify-between" >
-
-                <div className="flex flex-col"> 
-                  <p>
-                    <span className="font-semibold">Order ID:</span> {order.id}
-                  </p>
+      <div>
+        All Orders
+        <div>
+          {orders.map((order) => (
+            <div key={order._id} className="border p-1 mb-4">
+              <div className="flex flex-col">
+                <p>
+                  <span className="font-semibold">Order ID:</span> {order._id}
+                </p>
                 <p>
                   <span className="font-semibold">Item:</span> {order.item}
                 </p>
-
                 <p>
-                  <span className="font-semibold">From:</span> {order.from}
+                  <span className="font-semibold">From:</span> {order.pickupAddress}
                 </p>
                 <p>
-                  <span className="font-semibold">To:</span> {order.to}
+                  <span className="font-semibold">To:</span> {order.dropAddress}
                 </p>
-                </div>
-
-                <div className="flex flex-col ">
-                  <p>
-                  <span className="font-semibold">Date:</span> {order.date}
-                </p>
-                
                 <p>
-                  <span className="font-semibold">Walker:</span> {order.walker}
+                  <span className="font-semibold">Status:</span> {order.status}
                 </p>
-
                 <p>
-                  <span className="font-semibold">Status: </span> {order.status} 
+                  <span className="font-semibold">Walker:</span> {order.walkerID.name}
                 </p>
-
-                </div>
-              
+                {order.status !== "cancelled" && order.status !== "completed" && (
+                  <button
+                    onClick={() => handleCancelOrder(order._id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Cancel Order
+                  </button>
+                )}
               </div>
-            ))
-          ) : (
-            <p className="text-gray-500">No orders found.</p>
-          )}
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };

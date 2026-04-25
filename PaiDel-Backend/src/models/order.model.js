@@ -8,27 +8,29 @@ const orderSchema = new Schema(
             trim: true,
         },
         pickupAddress:{
-            type: Schema.Types.ObjectId,
-            ref: "Address"
+            type: String,
+            require: true,
+            trim: true,
         },
         dropAddress:{
-            type: Schema.Types.ObjectId,
-            ref: "Address"
+            type: String,
+            require: true,
+            trim: true,
         },
         status:{
             type: String,
             enum: ["pending", "accepted", "walking", "completed", "cancelled"],
             default: "pending"
         },
-        user:{
+        userID:{
             type: Schema.Types.ObjectId,
             ref: "User"
         },
-        walker:{
+        walkerID:{
             type: Schema.Types.ObjectId,
             ref: "User"
         },
-        payment:{
+        paymentID:{
             type: Schema.Types.ObjectId,
             ref: "Payment"
         }

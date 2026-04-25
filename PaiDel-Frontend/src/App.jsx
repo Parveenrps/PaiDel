@@ -46,7 +46,7 @@ function App() {
           <Route path="/verify-otp" element={<OtpRoute><VerifyOtp /></OtpRoute>} />
 
           <Route path="/user/*" element={<ProtectedRoute><User /></ProtectedRoute>} />
-          <Route path="/walker/*" element={<Walker />} />
+          <Route path="/walker/*" element={<ProtectedRoute><Walker /></ProtectedRoute>} />
         </Routes>
 
         
